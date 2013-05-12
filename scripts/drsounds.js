@@ -1,10 +1,22 @@
 
 (function (c) {
+	c.data = {};
 	c._import = function (t) {
 		var script = document.createElement('script');
 		script.setAttribute('src', t);
 		script.setAttribute('type', 'text/javascript');
 		document.head.appendChild(script);
+	}
+	c.query = function (startYear, endYear) {
+		var url = 'http://127.2.1.28/data.php';
+		if(typeof(startYear) !== 'undefined') {
+			url += "?start=" + startYear + "&end=" + endYear;
+		}
+		$.getJSON(url, function (data) {
+			sys.graft(data);
+			c.data = data;
+			
+		});
 	}
 	window.addEventListener('load', function () {
 		if(typeof(_getSpotifyModule) == 'undefined') {
@@ -13,9 +25,9 @@
 			c._import('scripts/require.js');
 		}
 		console.log(c);
-		var sys = arbor.ParticleSystem(500, 600,.5);
-		sys.parameters({gravity:true});
-		sys.renderer = Renderer("#viewport") ;
+		c.sys = arbor.ParticleSystem(500, 600,.5);
+		c.sys.parameters({gravity:true});
+		c.sys.renderer = Renderer("#viewport") ;
 		document.querySelector("#viewport").setAttribute("width", window.innerWidth);
 		document.querySelector("#viewport").setAttribute("height", window.innerHeight);
 		/*var data = {
@@ -55,33 +67,35 @@
 
 			}
 		};*/
+		c.query();
+		$('#viewport').dblclick(function(e){
+            var pos = $(this).offset();
+            var p = {x:e.pageX-pos.left, y:e.pageY-pos.top}
+            selected = nearest = dragged = c.sys.nearest(p);
 
-		$.getJSON('http://127.2.1.28/data.php', function (data) {
-			sys.graft(data);
-				
-			$('#viewport').dblclick(function(e){
-	            var pos = $(this).offset();
-	            var p = {x:e.pageX-pos.left, y:e.pageY-pos.top}
-	            selected = nearest = dragged = sys.nearest(p);
+            console.log('selected', selected);
 
-	            console.log('selected', selected);
-
-	            // Check if we are in Spotify apps environment or if we should initate
-	            // web mode
-	            if(typeof(_getSpotifyModule) !== 'undefined') {
-	            	require(['sp://drsounds/scripts/player.spotify#Player'], function(Player) {
-	            		console.log(data);
-	            		var player = new Player(data);
-	            		console.log(player);
-	            		player.play(selected.node.name);
-	            	});
-	            } else {
-	            	// In web mode, we must use the web player
-	            	// self.location = selected.node.data.link;
-	            }
-	            return false;
-	        });
-		});
+            // Check if we are in Spotify apps environment or if we should initate
+            // web mode
+            if(typeof(_getSpotifyModule) !== 'undefined') {
+            	require(['sp://drsounds/scripts/player.spotify#Player'], function(Player) {
+            		console.log(data);
+            		var player = new Player(c.data);
+            		console.log(player);
+            		player.play(selected.node.name);
+            	});
+            } else {
+            	// In web mode, we must use the web player
+            	// self.location = selected.node.data.link;
+            	require(['scripts/player.drsounds'], function (drsounds) {
+            		console.log("DATA", data);
+            		var player = new drsounds.Player(c.data);
+            		player.play(selected.node.name);
+            	});
+            }
+            return false;
+        });
+		
 		
 	});
 })(this);

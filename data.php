@@ -1,10 +1,20 @@
 <?php
 header('content-type: application/json');
+$timefilter = isset($_GET['start']) && isset($_GET['end']);
 $dbh = new PDO('mysql:host=localhost;dbname=drsounds;charset=utf-8', 'root', '123');
 $qsongs = $dbh->prepare("SELECT * FROM songs ORDER BY time ASC");
-$qrelations = $dbh->prepare("SELECT * FROM relations ORDER BY time ASC");
-$qsongs->execute();
-$qrelations->execute();
+if($timefilter) {
+	$qsongs = $dbh->prepare("SELECT * FROM songs WHERE time BETWEEN :start AND :end");
+
+}
+$qrelations = $dbh->prepare("SELECT * FROM relations WHERE time BETWEEN :start AND :end ORDER BY time ASC");
+$params = array();
+if($timefilter) {
+	$params = array('start' => $_GET['start'].'-01-01', 'end' => $_GET['end'].'-12-31');
+
+}
+$qsongs->execute($params);
+$qrelations->execute($params);
 
 $json = array();
 $json['nodes'] = array('drsounds' => array('color' => 'rgba(0, 0, 0, 1)', 'type' => 'dot', 'label' => 'Dr. Sounds'));
@@ -16,6 +26,8 @@ foreach($songs as $song) {
 		'color' => $song['color'],
 		'label' => $song['title'],
 		'link' => $song['link'],
+		'soundcloud' => $song['soundcloud'],
+		'youtube' => $song['youtube'],
 		'shape' => 'rectangle'
 	);
 }

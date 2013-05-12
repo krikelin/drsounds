@@ -47,9 +47,10 @@ var __space = (function (c) {
 
 	};
 });
-if(typeof(_getSpotifyModule !== 'undefined')) {
+if(typeof(_getSpotifyModule) !== 'undefined') {
 	__space(exports);
 } else {
-	__space(this);
-	define(this);
+	var e = {};
+	__space(e);
+	define(e);
 }
