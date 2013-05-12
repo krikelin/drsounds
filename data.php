@@ -1,7 +1,7 @@
 <?php
 header('content-type: application/json');
 $timefilter = isset($_GET['start']) && isset($_GET['end']);
-
+$interlace = true;
 $dbh = new PDO('mysql:host=localhost;dbname=drsounds;charset=utf-8', 'root', '123');
 $qsongs = $dbh->prepare("SELECT * FROM songs ORDER BY time ASC");
 if($timefilter) {
@@ -44,9 +44,16 @@ foreach($songs as $song) {
 	);
 }
 $json['edges'] = array('drsounds' => array());
-foreach($startSongs as $song) {
+if($interlace) {
+	foreach($startSongs as $song) {
 
-	$json['edges']['drsounds'][$song['slug']] = array();
+		$json['edges']['drsounds'][$song['slug']] = array();
+	}
+} else {
+	foreach($json['nodes'] as $key => $value) {
+		$json['edges']['drsounds'][$key] = array();
+	}
+	
 }
 foreach($relations as $relation) {
 	$json['edges'][$relation['song1']]= array($relation['song2'] => array());

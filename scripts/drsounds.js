@@ -14,7 +14,7 @@
 		return typeof(_getSpotifyModule) !== 'undefined';
 	}
 	c.query = function (startYear, endYear) {
-		var url = 'http://www.dr-sounds.com/data.php?start=2001-01-01&end=2013-12-31';
+		var url = 'data.php?start=2001-01-01&end=2013-12-31';
 		if(c.isSpotifyApps()) {
 			url = 'http://127.2.1.28/data.php?start=2001-01-01&end=2013-12-31';
 		}
@@ -35,7 +35,7 @@
 		}
 		console.log(c);
 		c.sys = arbor.ParticleSystem(500, 600,.5);
-		c.sys.parameters({gravity:true});
+		c.sys.parameters({gravity:false});
 		c.sys.renderer = Renderer("#viewport") ;
 		document.querySelector("#viewport").setAttribute("width", window.innerWidth);
 		document.querySelector("#viewport").setAttribute("height", window.innerHeight);
@@ -77,6 +77,12 @@
 			}
 		};*/
 		c.query();
+		if(c.isSpotifyApps()) {
+			require(['$views/buttons#SubscribeButton', '$api/models#Artist'], function(SubscribeButton, Artist) {
+				var btn = SubscribeButton.forArtist(Artist.fromURI('spotify:artist:2FOROU2Fdxew72QmueWSUy'));
+				document.querySelector('#followBar').appendChild(btn.node);
+			})
+		}
 		$('#viewport').dblclick(function(e){
             var pos = $(this).offset();
             var p = {x:e.pageX-pos.left, y:e.pageY-pos.top}
