@@ -25,7 +25,7 @@ var __space = (function (c) {
 				console.log(this.data.edges[key]);
 				for(var key2 in this.data.edges[key]) {
 					if(key == currentKey) {
-						
+
 						edges.push(this.data.nodes[key2]);
 						currentKey = key2;
 					}
@@ -47,8 +47,9 @@ var __space = (function (c) {
 
 	};
 });
-if(exports) {
+if(typeof(_getSpotifyModule !== 'undefined')) {
 	__space(exports);
 } else {
 	__space(this);
+	define(this);
 }

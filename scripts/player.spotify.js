@@ -40,7 +40,7 @@ if(require) {
 					tracks.push(edge.link.split(':')[2]);
 					console.log("URI", uri.join(':'));
 				}
-				uri.push(tracks.join(','));
+				uri.push(tracks.join(','))
 				var context = Context.fromURI(uri.join(':'));
 				return context;
 			};

@@ -1,6 +1,18 @@
-(function (c) {
 
+(function (c) {
+	c._import = function (t) {
+		var script = document.createElement('script');
+		script.setAttribute('src', t);
+		script.setAttribute('type', 'text/javascript');
+		document.head.appendChild(script);
+	}
 	window.addEventListener('load', function () {
+		if(typeof(_getSpotifyModule) == 'undefined') {
+			console.log('a');
+			// If in web mode
+			c._import('scripts/require.js');
+		}
+		console.log(c);
 		var sys = arbor.ParticleSystem(500, 600,.5);
 		sys.parameters({gravity:true});
 		sys.renderer = Renderer("#viewport") ;
@@ -53,13 +65,19 @@
 	            selected = nearest = dragged = sys.nearest(p);
 
 	            console.log('selected', selected);
-	            if(require) {
+
+	            // Check if we are in Spotify apps environment or if we should initate
+	            // web mode
+	            if(typeof(_getSpotifyModule) !== 'undefined') {
 	            	require(['sp://drsounds/scripts/player.spotify#Player'], function(Player) {
 	            		console.log(data);
 	            		var player = new Player(data);
 	            		console.log(player);
 	            		player.play(selected.node.name);
 	            	});
+	            } else {
+	            	// In web mode, we must use the web player
+	            	// self.location = selected.node.data.link;
 	            }
 	            return false;
 	        });
