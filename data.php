@@ -7,7 +7,7 @@ $qsongs->execute();
 $qrelations->execute();
 
 $json = array();
-$json['nodes'] = array();
+$json['nodes'] = array('drsounds' => array('color' => 'rgba(0, 0, 0, 1)', 'type' => 'dot', 'label' => 'Dr. Sounds'));
 $json['edges'] = array();
 $songs = $qsongs->fetchAll();
 $relations = $qrelations->fetchAll();
@@ -18,6 +18,11 @@ foreach($songs as $song) {
 		'link' => $song['link'],
 		'shape' => 'rectangle'
 	);
+}
+$json['edges'] = array('drsounds' => array());
+foreach($json['nodes'] as $key => $value) {
+
+	$json['edges']['drsounds'][$key] = array();
 }
 foreach($relations as $relation) {
 	$json['edges'][$relation['song1']]= array($relation['song2'] => array());

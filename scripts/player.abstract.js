@@ -25,7 +25,7 @@ var __space = (function (c) {
 				console.log(this.data.edges[key]);
 				for(var key2 in this.data.edges[key]) {
 					if(key == currentKey) {
-						alert(key2);
+						
 						edges.push(this.data.nodes[key2]);
 						currentKey = key2;
 					}
