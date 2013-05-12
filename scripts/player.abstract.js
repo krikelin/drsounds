@@ -15,15 +15,17 @@ var __space = (function (c) {
 		console.log(edgeName);
 			var edges = [];
 			var currentKey = edgeName;
-			console.log(this.data);
-			edges.push(this.data.nodes[edgeName]);
+			console.log("Edge Name", edgeName);
+			var node = this.data.nodes[edgeName];
+			console.log('nodes', this.data.nodes);
+			console.log(this.data.edges);
+			edges.push(node);
 			for(var key in this.data.edges) {
 				console.log(key);
 				console.log(this.data.edges[key]);
 				for(var key2 in this.data.edges[key]) {
-						console.log(key2);
 					if(key == currentKey) {
-						console.log(key);
+						alert(key2);
 						edges.push(this.data.nodes[key2]);
 						currentKey = key2;
 					}

@@ -32,11 +32,15 @@ if(require) {
 			exports.Player.prototype.getContext = function (nodeName) {
 				var edges = this.getRelatives(nodeName);
 				var uri = ['spotify', 'trackset', nodeName];
+				console.log('edges.length', edges.length);
+				var tracks = [];
 				for(var key in edges) {
 					var edge = edges[key];
 					console.log(edge);
-					uri.push(edge.link.split(':')[2]);
+					tracks.push(edge.link.split(':')[2]);
+					console.log("URI", uri.join(':'));
 				}
+				uri.push(tracks.join(','));
 				var context = Context.fromURI(uri.join(':'));
 				return context;
 			};
