@@ -7,8 +7,17 @@
 		script.setAttribute('type', 'text/javascript');
 		document.head.appendChild(script);
 	}
+	/**
+	 * Determines whether if we are in Spotify apps environment or not
+	 */
+	c.isSpotifyApps = function () {
+		return typeof(_getSpotifyModule) !== 'undefined';
+	}
 	c.query = function (startYear, endYear) {
-		var url = 'http://127.2.1.28/data.php';
+		var url = 'http://www.dr-sounds.com/data.php?start=2001-01-01&end=2013-12-31';
+		if(c.isSpotifyApps()) {
+			url = 'http://127.2.1.28/data.php?start=2001-01-01&end=2013-12-31';
+		}
 		if(typeof(startYear) !== 'undefined') {
 			url += "?start=" + startYear + "&end=" + endYear;
 		}
